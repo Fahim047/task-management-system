@@ -13,6 +13,6 @@ export type AuthContextType = {
 	user: User | null;
 	setUser: React.Dispatch<React.SetStateAction<User | null>>;
 	loading: boolean;
-	handleSignInWithGoogle?: () => Promise<void>;
+	handleSignInWithGoogle?: () => Promise<User | null>;
 	handleLogout?: () => Promise<void>;
 };

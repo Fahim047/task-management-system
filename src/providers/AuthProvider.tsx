@@ -14,12 +14,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 
-	const handleSignInWithGoogle = async (): Promise<void> => {
+	const handleSignInWithGoogle = async (): Promise<User | null> => {
 		try {
 			const result = await signInWithPopup(auth, googleProvider);
 			setUser(result.user);
+			return result.user;
 		} catch (error) {
 			console.error('Google Sign-In Error:', error);
+			return null;
 		}
 	};
 

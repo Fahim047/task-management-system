@@ -1,4 +1,5 @@
 import GoogleIcon from '@/assets/google.svg';
+import apiClient from '@/axios/apiClient';
 import { useAuth } from '@/hooks';
 import { Navigate, useNavigate } from 'react-router';
 import { Button } from '../ui';
@@ -9,7 +10,12 @@ const LoginForm = () => {
 	const handleLogin = async (): Promise<void> => {
 		try {
 			if (handleSignInWithGoogle) {
-				await handleSignInWithGoogle();
+				const user = await handleSignInWithGoogle();
+				await apiClient.post('/users', {
+					name: user?.displayName,
+					email: user?.email,
+					photoURL: user?.photoURL,
+				});
 				console.log('Successfully logged in');
 				navigate('/');
 			} else {
