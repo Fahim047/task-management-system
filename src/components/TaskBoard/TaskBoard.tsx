@@ -47,7 +47,7 @@ const TaskBoard = () => {
 		<section className="max-w-7xl mx-auto p-4">
 			<div className="flex justify-between items-center gap-4 mb-4">
 				<h4 className="text-lg md:text-2xl">Task Board</h4>
-				<Button className="bg-gradient-to-r from-green-400 to-emerald-900 cursor-pointer">
+				<Button variant="outline" className="cursor-pointer">
 					<Plus />
 					Add Task
 				</Button>
