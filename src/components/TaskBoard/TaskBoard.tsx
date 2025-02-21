@@ -1,8 +1,7 @@
 import { TaskType } from '@/types';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import { Plus } from 'lucide-react';
 import { useState } from 'react';
-import { Button } from '../ui';
+import AddTaskButton from './AddTaskButton';
 import TaskCategory from './TaskCategory';
 
 const initialTasks = [
@@ -47,10 +46,7 @@ const TaskBoard = () => {
 		<section className="max-w-7xl mx-auto p-4">
 			<div className="flex justify-between items-center gap-4 mb-4">
 				<h4 className="text-lg md:text-2xl">Task Board</h4>
-				<Button variant="outline" className="cursor-pointer">
-					<Plus />
-					Add Task
-				</Button>
+				<AddTaskButton />
 			</div>
 			<DragDropContext onDragEnd={onDragEnd}>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-start">
