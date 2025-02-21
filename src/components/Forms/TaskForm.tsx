@@ -1,10 +1,24 @@
+import apiClient from '@/axios/apiClient';
+import { toast } from 'sonner';
 import { Button, Input, Textarea } from '../ui';
 import { Label } from '../ui/label';
-
-const TaskForm = () => {
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+interface TaskFormProps {
+	onClose: () => void;
+}
+const TaskForm = ({ onClose }: TaskFormProps) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log(e.currentTarget);
+		const formData = new FormData(e.currentTarget);
+		const title = formData.get('title');
+		const description = formData.get('description');
+		try {
+			await apiClient.post('/tasks', { title, description });
+			toast.success('New task added');
+			onClose();
+		} catch (error) {
+			console.error(error);
+			toast.error(`Couldn't add task`);
+		}
 	};
 	return (
 		<form onSubmit={handleSubmit}>

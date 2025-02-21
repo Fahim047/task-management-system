@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react';
+import { useState } from 'react';
 import TaskForm from '../Forms/TaskForm';
 import { Button } from '../ui';
 import {
@@ -10,9 +11,10 @@ import {
 } from '../ui/dialog';
 
 const AddTaskButton = () => {
+	const [open, setOpen] = useState<boolean>(false);
 	return (
-		<Dialog>
-			<DialogTrigger>
+		<Dialog open={open} onOpenChange={setOpen}>
+			<DialogTrigger asChild>
 				<Button variant="outline" className="cursor-pointer">
 					<Plus />
 					Add Task
@@ -23,7 +25,7 @@ const AddTaskButton = () => {
 				<DialogDescription>
 					Please fill in the form below to create a new task.
 				</DialogDescription>
-				<TaskForm />
+				<TaskForm onClose={() => setOpen(false)} />
 			</DialogContent>
 		</Dialog>
 	);

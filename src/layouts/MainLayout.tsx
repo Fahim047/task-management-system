@@ -1,8 +1,8 @@
 import Navbar from '@/components/Navbar/Navbar';
+import { Toaster } from '@/components/ui/sonner';
 import { useAuth } from '@/hooks';
 import { Loader } from 'lucide-react';
 import { Outlet } from 'react-router';
-
 const MainLayout = () => {
 	const { loading } = useAuth();
 	if (loading)
@@ -15,6 +15,7 @@ const MainLayout = () => {
 		<>
 			<Navbar />
 			<Outlet />
+			<Toaster richColors position="top-right" />
 		</>
 	);
 };
