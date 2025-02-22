@@ -18,31 +18,31 @@ const TaskBoard = () => {
 			return response.data;
 		},
 	});
-	// Mutation to update task category
+
 	const updateTaskMutation = useMutation({
-		mutationFn: async (updatedTask) => {
+		mutationFn: async (updatedTask: TaskType) => {
 			await apiClient.patch(`/tasks/${updatedTask.id}`, updatedTask);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['tasks'] }); // Refetch tasks
+			queryClient.invalidateQueries({ queryKey: ['tasks'] });
 		},
 	});
 	const onDragEnd = (result: DropResult) => {
 		if (!result.destination) return;
 
-		const updatedTasks = tasks.map((task) => {
+		const updatedTasks = tasks.map((task: TaskType) => {
 			if (task.id.toString() === result.draggableId) {
 				const updatedTask = {
 					...task,
 					category: result.destination?.droppableId,
 				};
-				updateTaskMutation.mutate(updatedTask); // 🔥 Update backend
+				updateTaskMutation.mutate(updatedTask);
 				return updatedTask;
 			}
 			return task;
 		});
 
-		// Optimistic UI update (optional)
+		// Optimistic UI update
 		queryClient.setQueryData(['tasks'], updatedTasks);
 	};
 	if (isPending) return <p>Loading...</p>;

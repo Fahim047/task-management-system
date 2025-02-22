@@ -1,4 +1,5 @@
 import apiClient from '@/axios/apiClient';
+import { formatDate } from '@/lib/date-utils';
 import { TaskType } from '@/types';
 import { Draggable } from '@hello-pangea/dnd';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -88,7 +89,10 @@ const TaskItem = ({ task, index }: TaskItemProps) => {
 					</div>
 					<p className="mb-2 text-sm text-zinc-200">{description}</p>
 					<p className="mt-6 text-xs text-zinc-400">
-						{new Date().toDateString()}
+						Created: {task.createdAt && formatDate(task.createdAt)}
+					</p>
+					<p className="mt-2 text-xs text-zinc-400">
+						Last Updated: {task.updatedAt && formatDate(task.updatedAt)}
 					</p>
 				</div>
 			)}

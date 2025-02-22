@@ -7,8 +7,8 @@ export type TaskType = {
 	description: string;
 	category?: string;
 	order?: string;
-	createdAt?: Date;
-	updatedAt?: Date;
+	createdAt?: string;
+	updatedAt?: string;
 };
 export type AuthContextType = {
 	user: User | null;
