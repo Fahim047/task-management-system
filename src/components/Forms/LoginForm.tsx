@@ -2,6 +2,7 @@ import GoogleIcon from '@/assets/google.svg';
 import apiClient from '@/axios/apiClient';
 import { useAuth } from '@/hooks';
 import { Navigate, useNavigate } from 'react-router';
+import { toast } from 'sonner';
 import { Button } from '../ui';
 const LoginForm = () => {
 	const { user, handleSignInWithGoogle } = useAuth();
@@ -16,7 +17,7 @@ const LoginForm = () => {
 					email: user?.email,
 					photoURL: user?.photoURL,
 				});
-				console.log('Successfully logged in');
+				toast.success('Welcome!');
 				navigate('/');
 			} else {
 				throw new Error('handleSignInWithGoogle is not defined');

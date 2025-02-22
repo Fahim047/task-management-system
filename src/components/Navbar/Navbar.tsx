@@ -1,14 +1,17 @@
 import { useAuth } from '@/hooks';
-import { Link, useNavigate } from 'react-router';
-import { Button, Input } from '../ui';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { toast } from 'sonner';
+import { Button } from '../ui';
 
 const Navbar = () => {
 	const { user, handleLogout } = useAuth();
 	const navigate = useNavigate();
+	const { pathname } = useLocation();
 	const handleSignOut = async (): Promise<void> => {
 		try {
 			if (handleLogout) {
 				await handleLogout();
+				toast.success('See you soon!');
 				navigate('/login');
 			} else {
 				throw new Error('handleLogout is not defined');
@@ -27,7 +30,7 @@ const Navbar = () => {
 					Taskify
 				</Link>
 
-				<Input className="max-w-1/2" placeholder="Search..." />
+				{/* <Input className="max-w-1/2" placeholder="Search..." /> */}
 				{user ? (
 					<div className="flex items-center gap-2">
 						<img
@@ -46,13 +49,15 @@ const Navbar = () => {
 						</Button>
 					</div>
 				) : (
-					<Button
-						asChild
-						size="lg"
-						className="bg-gradient-to-r from-green-400 to-green-600 cursor-pointer hover:opacity-80"
-					>
-						<Link to="/login">Login</Link>
-					</Button>
+					pathname !== '/login' && (
+						<Button
+							asChild
+							size="lg"
+							className="bg-gradient-to-r from-green-400 to-green-600 cursor-pointer hover:opacity-80"
+						>
+							<Link to="/login">Login</Link>
+						</Button>
+					)
 				)}
 			</div>
 		</nav>

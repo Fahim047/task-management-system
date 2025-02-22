@@ -1,6 +1,5 @@
 import { TaskType } from '@/types';
 import { Droppable } from '@hello-pangea/dnd';
-import { SortAsc } from 'lucide-react';
 import TaskItem from './TaskItem';
 
 interface TaskCategoryProps {
@@ -25,7 +24,7 @@ const TaskCategory = ({ tasks, category }: TaskCategoryProps) => {
 				>
 					<div className="flex justify-between items-center mb-2 text-white">
 						<h4 className="text-xl">{`${category}(${tasks.length})`}</h4>
-						<SortAsc />
+						{/* <SortAsc /> */}
 					</div>
 					<ul className="flex flex-col gap-2 flex-grow">
 						{tasks.length > 0 ? (

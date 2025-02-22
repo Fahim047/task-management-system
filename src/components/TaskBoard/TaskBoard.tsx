@@ -2,6 +2,7 @@ import apiClient from '@/axios/apiClient';
 import { TaskType } from '@/types';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import AddTaskButton from './AddTaskButton';
 import TaskCategory from './TaskCategory';
 
@@ -24,6 +25,7 @@ const TaskBoard = () => {
 			await apiClient.patch(`/tasks/${updatedTask.id}`, updatedTask);
 		},
 		onSuccess: () => {
+			toast.success('Task updated');
 			queryClient.invalidateQueries({ queryKey: ['tasks'] });
 		},
 	});
