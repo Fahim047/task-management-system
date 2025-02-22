@@ -15,6 +15,14 @@ const MainLayout = () => {
 		<>
 			<Navbar />
 			<Outlet />
+			<footer className="p-4">
+				<p className="text-center">
+					Made with ❤️ by{' '}
+					<span className="font-bold text-green-400 hover:underline">
+						Fahimul Islam
+					</span>
+				</p>
+			</footer>
 			<Toaster richColors position="top-right" />
 		</>
 	);
