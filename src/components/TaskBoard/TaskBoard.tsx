@@ -1,47 +1,52 @@
+import apiClient from '@/axios/apiClient';
 import { TaskType } from '@/types';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import AddTaskButton from './AddTaskButton';
 import TaskCategory from './TaskCategory';
 
-const initialTasks = [
-	{
-		title: 'test',
-		id: 1,
-		description: 'test test test',
-		category: 'To-Do',
-	},
-	{
-		title: 'test',
-		id: 2,
-		description: 'test test test',
-		category: 'In Progress',
-	},
-	{
-		title: 'test',
-		id: 3,
-		description: 'test test test',
-		category: 'Done',
-	},
-];
-
 const TaskBoard = () => {
-	const [tasks, setTasks] = useState<TaskType[]>(initialTasks);
-
+	const queryClient = useQueryClient();
+	const {
+		data: tasks,
+		isPending,
+		isError,
+	} = useQuery({
+		queryKey: ['tasks'],
+		queryFn: async () => {
+			const response = await apiClient.get('/tasks');
+			return response.data;
+		},
+	});
+	// Mutation to update task category
+	const updateTaskMutation = useMutation({
+		mutationFn: async (updatedTask) => {
+			await apiClient.patch(`/tasks/${updatedTask.id}`, updatedTask);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['tasks'] }); // Refetch tasks
+		},
+	});
 	const onDragEnd = (result: DropResult) => {
 		if (!result.destination) return;
+
 		const updatedTasks = tasks.map((task) => {
 			if (task.id.toString() === result.draggableId) {
-				return {
+				const updatedTask = {
 					...task,
-					category: result?.destination?.droppableId as string,
+					category: result.destination?.droppableId,
 				};
+				updateTaskMutation.mutate(updatedTask); // 🔥 Update backend
+				return updatedTask;
 			}
 			return task;
 		});
-		setTasks(updatedTasks);
-	};
 
+		// Optimistic UI update (optional)
+		queryClient.setQueryData(['tasks'], updatedTasks);
+	};
+	if (isPending) return <p>Loading...</p>;
+	if (isError) return <p>Something went wrong...</p>;
 	return (
 		<section className="max-w-7xl mx-auto p-4">
 			<div className="flex justify-between items-center gap-4 mb-4">
@@ -52,15 +57,15 @@ const TaskBoard = () => {
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-start">
 					<TaskCategory
 						category="To-Do"
-						tasks={tasks.filter((t) => t.category === 'To-Do')}
+						tasks={tasks.filter((t: TaskType) => t.category === 'To-Do')}
 					/>
 					<TaskCategory
 						category="In Progress"
-						tasks={tasks.filter((t) => t.category === 'In Progress')}
+						tasks={tasks.filter((t: TaskType) => t.category === 'In Progress')}
 					/>
 					<TaskCategory
 						category="Done"
-						tasks={tasks.filter((t) => t.category === 'Done')}
+						tasks={tasks.filter((t: TaskType) => t.category === 'Done')}
 					/>
 				</div>
 			</DragDropContext>

@@ -1,7 +1,8 @@
 import { TaskType } from '@/types';
 import { Draggable } from '@hello-pangea/dnd';
-import { PenIcon, TrashIcon } from 'lucide-react';
+import { TrashIcon } from 'lucide-react';
 import { Button } from '../ui';
+import EditTaskButton from './EditTaskButton';
 
 interface TaskItemProps {
 	task: TaskType;
@@ -30,9 +31,7 @@ const TaskItem = ({ task, index }: TaskItemProps) => {
 							{title}
 						</h4>
 						<div className="flex gap-2">
-							<Button className="text-white" size="icon">
-								<PenIcon />
-							</Button>
+							<EditTaskButton task={task} />
 							<Button className="text-white" variant="destructive" size="icon">
 								<TrashIcon />
 							</Button>

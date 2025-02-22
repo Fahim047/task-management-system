@@ -1,25 +1,51 @@
 import apiClient from '@/axios/apiClient';
+import { TaskType } from '@/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button, Input, Textarea } from '../ui';
 import { Label } from '../ui/label';
+
 interface TaskFormProps {
 	onClose: () => void;
+	currentTask?: TaskType;
 }
-const TaskForm = ({ onClose }: TaskFormProps) => {
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		const formData = new FormData(e.currentTarget);
-		const title = formData.get('title');
-		const description = formData.get('description');
-		try {
-			await apiClient.post('/tasks', { title, description });
-			toast.success('New task added');
+
+const TaskForm = ({ onClose, currentTask }: TaskFormProps) => {
+	const isEdit = Boolean(currentTask);
+	const [title, setTitle] = useState(isEdit ? currentTask!.title : '');
+	const [description, setDescription] = useState(
+		isEdit ? currentTask!.description : ''
+	);
+
+	const queryClient = useQueryClient();
+
+	const { mutate, isPending } = useMutation({
+		mutationFn: async () => {
+			if (isEdit) {
+				return await apiClient.patch(`/tasks/${currentTask!.id}`, {
+					title,
+					description,
+				});
+			} else {
+				return await apiClient.post('/tasks', { title, description });
+			}
+		},
+		onSuccess: () => {
+			toast.success(isEdit ? 'Task updated successfully' : 'New task added');
+			queryClient.invalidateQueries({ queryKey: ['tasks'] });
 			onClose();
-		} catch (error) {
-			console.error(error);
-			toast.error(`Couldn't add task`);
-		}
+		},
+		onError: () => {
+			toast.error("Couldn't save task. Please try again.");
+		},
+	});
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		mutate();
 	};
+
 	return (
 		<form onSubmit={handleSubmit}>
 			<div className="mb-4">
@@ -28,6 +54,8 @@ const TaskForm = ({ onClose }: TaskFormProps) => {
 					type="text"
 					id="title"
 					name="title"
+					value={title}
+					onChange={(e) => setTitle(e.target.value)}
 					placeholder="Enter task title"
 					required
 				/>
@@ -37,40 +65,20 @@ const TaskForm = ({ onClose }: TaskFormProps) => {
 				<Textarea
 					id="description"
 					name="description"
+					value={description}
+					onChange={(e) => setDescription(e.target.value)}
 					placeholder="Write a short description of the task"
 					required
 					className="resize-none h-20"
 				/>
 			</div>
-			{/* <div className="mb-4">
-					<Label htmlFor="category">Category</Label>
-					<Select>
-						<SelectTrigger className="w-[180px]">
-							<SelectValue placeholder="Select Category" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectGroup>
-								<SelectLabel>Category</SelectLabel>
-								<SelectItem value="To-Do">To Do</SelectItem>
-								<SelectItem value="In Progress">In Progress</SelectItem>
-								<SelectItem value="Done">Done</SelectItem>
-							</SelectGroup>
-						</SelectContent>
-					</Select>
-				</div> */}
-			{/* <div className="mb-4">
-					<Label htmlFor="deadline">Deadline</Label>
-					<Input
-						type="date"
-						id="deadline"
-						name="deadline"
-						required
-						className="w-full"
-					/>
-				</div> */}
 			<div className="flex justify-end space-x-3">
-				{/* <Button variant="outline">Cancel</Button> */}
-				<Button type="submit">Create Task</Button>
+				<Button type="button" variant="outline" onClick={onClose}>
+					Cancel
+				</Button>
+				<Button type="submit" disabled={isPending}>
+					{isPending ? 'Saving...' : isEdit ? 'Update Task' : 'Create Task'}
+				</Button>
 			</div>
 		</form>
 	);
