@@ -1,50 +1,93 @@
-# React + TypeScript + Vite
+# **Taskify - Task Management Board**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Short Description
 
-Currently, two official plugins are available:
+A simple and interactive drag-and-drop task management board built with **React, TypeScript, and React Query**. Users can create, update, delete, and reorder tasks within different categories like **To-Do, In Progress, and Done**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌐 Live Demo
 
-## Expanding the ESLint configuration
+[🔗 Live Preview](https://taskify-fahim047.vercel.app/)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 📦 Dependencies
 
-- Configure the top-level `parserOptions` property like this:
+This project uses the following major dependencies:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- **React** (Frontend UI)
+- **TypeScript** (Static typing for maintainability)
+- **@hello-pangea/dnd** (Drag-and-drop functionality)
+- **@tanstack/react-query** (Data fetching and state management)
+- **Axios** (API client for HTTP requests)
+- **Lucide-react** (Icon library)
+- **ShadCN/UI** (UI components)
+- **Tailwind CSS** (Styling framework)
+
+## 🔧 Installation Steps
+
+1. **Clone the Repository**
+
+   ```
+   git clone https://github.com/your-username/task-board.git
+   cd task-board
+
+   ```
+
+2. **Install Dependencies**
+
+   ```
+   npm install
+   # or
+   yarn install
+
+   ```
+
+3. **Set Up Environment Variables**
+
+   Create a `.env` file in the root directory and add:
+
+   ```
+   VITE_Firebase_ApiKey=
+   VITE_Firebase_AuthDomain=
+   VITE_Firebase_ProjectId=
+   VITE_Firebase_StorageBucket=
+   VITE_Firebase_MessagingSenderId=
+   VITE_Firebase_AppId=
+   VITE_API_BASE_URL=
+   ```
+
+4. **Start the Development Server**
+
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+npm run dev
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+# or
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+yarn dev
+
 ```
+
+2. **Run the Backend (if applicable)**
+
+_(If you have a backend, ensure it’s running to fetch tasks correctly.)_
+
+3. **Build for Production**
+
+```
+
+npm run build
+
+```
+
+## 🛠 Technologies Used
+
+- **Frontend:** React, TypeScript, Tailwind CSS
+- **State Management:** React Query
+- **Drag & Drop:** @hello-pangea/dnd
+- **Backend:** Node.js & Express (if applicable)
+- **Database:** MongoDB / PostgreSQL (if applicable)
+
+---
+
+### 📝 Feel free to contribute!
+
+If you’d like to add features or fix issues, fork the repo and create a pull request. 🚀
