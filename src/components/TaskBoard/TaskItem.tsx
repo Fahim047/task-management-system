@@ -1,6 +1,9 @@
+import apiClient from '@/axios/apiClient';
 import { TaskType } from '@/types';
 import { Draggable } from '@hello-pangea/dnd';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TrashIcon } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '../ui';
 import EditTaskButton from './EditTaskButton';
 
@@ -10,12 +13,53 @@ interface TaskItemProps {
 }
 const TaskItem = ({ task, index }: TaskItemProps) => {
 	const { title, description, category } = task;
+	const queryClient = useQueryClient();
+
 	const titleColor =
 		category === 'To-Do'
 			? 'text-blue-400'
 			: category === 'In Progress'
 			? 'text-yellow-400'
 			: 'text-green-400';
+
+	const deleteMutation = useMutation({
+		mutationFn: async () => {
+			await apiClient.delete(`/tasks/${task.id}`);
+		},
+		onSuccess: () => {
+			toast.success('Task deleted successfully');
+			queryClient.invalidateQueries({ queryKey: ['tasks'] });
+		},
+		onError: () => {
+			toast.error("Couldn't delete task. Please try again.");
+		},
+	});
+
+	const handleDelete = () => {
+		const alertId = toast(
+			<div className="w-full mr-0 text-center space-y-6">
+				<p className="text-lg">Are you sure you want to delete?</p>
+				<div className="flex justify-end items-center gap-2">
+					<Button
+						variant={'destructive'}
+						size="sm"
+						onClick={() => {
+							toast.dismiss(alertId);
+							deleteMutation.mutate();
+						}}
+					>
+						Delete
+					</Button>
+					<Button size="sm" onClick={() => toast.dismiss()}>
+						Cancel
+					</Button>
+				</div>
+			</div>,
+			{
+				position: 'top-center',
+			}
+		);
+	};
 
 	return (
 		<Draggable draggableId={task.id.toString()} index={index}>
@@ -32,7 +76,12 @@ const TaskItem = ({ task, index }: TaskItemProps) => {
 						</h4>
 						<div className="flex gap-2">
 							<EditTaskButton task={task} />
-							<Button className="text-white" variant="destructive" size="icon">
+							<Button
+								onClick={handleDelete}
+								className="text-white"
+								variant="destructive"
+								size="icon"
+							>
 								<TrashIcon />
 							</Button>
 						</div>
